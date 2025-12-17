@@ -1,5 +1,5 @@
 {
-  "name": "lifewithamotorcycle-recap",
+  "name": "lifewithamotorcycle",
   "private": true,
   "scripts": {
     "dev": "next dev",
