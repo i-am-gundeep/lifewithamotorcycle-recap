@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import {
   Box,
@@ -8,12 +9,10 @@ import {
   Button,
   FormControl,
   FormLabel,
-  SimpleGrid,
-  Image,
   Flex,
-  Select
+  Image
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Generate() {
   const YEAR = new Date().getFullYear();
@@ -33,7 +32,7 @@ export default function Generate() {
     reader.readAsDataURL(file);
   };
 
-  const generatePoster = () => {
+  const downloadPoster = () => {
     const id = Math.random().toString(36).substring(2, 8);
     sessionStorage.setItem(
       id,
@@ -45,7 +44,7 @@ export default function Generate() {
   return (
     <Box minH="100vh" bg="#141414" color="white" p={6}>
       <Heading textAlign="center" mb={6} fontSize={{ base: "2xl", md: "3xl" }}>
-        my riding recap {YEAR}
+        MY RIDING RECAP {YEAR}
       </Heading>
 
       <Flex
@@ -56,89 +55,77 @@ export default function Generate() {
       >
         {/* Inputs */}
         <VStack spacing={4} flex="1">
-          {/* Bike Brand Dropdown */}
+          {/* My Fav Memory */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              choose your bike brand 🏍️
+              My fav memory 📷
             </FormLabel>
-            <Select
-              placeholder="Select brand"
-              name="brand"
-              bg="#1A1A1A"
-              border="1px solid #222"
-              onChange={handleChange}
-            >
-              {[
-                "Honda",
-                "Yamaha",
-                "Royal Enfield",
-                "KTM",
-                "Triumph",
-                "BMW",
-                "Kawasaki",
-                "Suzuki",
-                "TVS",
-                "Bajaj",
-                "Hero",
-                "Other"
-              ].map((b) => (
-                <option key={b} value={b}>
-                  {b}
-                </option>
-              ))}
-            </Select>
+            <Input type="file" accept="image/*" onChange={handleImageUpload} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
 
-          {/* Ride Name */}
+          {/* My IG Handle */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              your ride's name ✨
+              My IG handle 📸
             </FormLabel>
-            <Input
-              name="ride"
-              bg="#1A1A1A"
-              border="1px solid #222"
-              onChange={handleChange}
-            />
+            <Input name="handle" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
 
-          {/* Other Cute Fields */}
-          {[
-            ["how far we rode 🛣️", "km"],
-            ["rides we took 🧭", "trips"],
-            ["fastest moment 💨", "speed"],
-            ["longest day 🏔️", "longest"],
-            ["fuelled with ₹💸", "money"],
-            ["this is me on IG 📸", "handle"]
-          ].map(([label, name]) => (
-            <FormControl key={name}>
-              <FormLabel fontSize="sm" color="gray.400">
-                {label}
-              </FormLabel>
-              <Input
-                name={name}
-                bg="#1A1A1A"
-                border="1px solid #222"
-                onChange={handleChange}
-              />
-            </FormControl>
-          ))}
-
-          {/* Photo Upload */}
+          {/* This year I rode */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              favourite memory 📷
+              This year I rode 🛣️
             </FormLabel>
-            <Input type="file" accept="image/*" onChange={handleImageUpload} />
+            <Input name="km" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
+          </FormControl>
+
+          {/* Completed rides */}
+          <FormControl>
+            <FormLabel fontSize="sm" color="gray.400">
+              Completed rides 🧭
+            </FormLabel>
+            <Input name="trips" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
+          </FormControl>
+
+          {/* Fastest */}
+          <FormControl>
+            <FormLabel fontSize="sm" color="gray.400">
+              Fastest 💨
+            </FormLabel>
+            <Input name="speed" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
+          </FormControl>
+
+          {/* Longest run in a day */}
+          <FormControl>
+            <FormLabel fontSize="sm" color="gray.400">
+              Longest run in a day 🏔️
+            </FormLabel>
+            <Input name="longest" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
+          </FormControl>
+
+          {/* Police meetups / Challans */}
+          <FormControl>
+            <FormLabel fontSize="sm" color="gray.400">
+              Police meetups / Challans? 🚓
+            </FormLabel>
+            <Input name="challans" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
+          </FormControl>
+
+          {/* Total I spent this year */}
+          <FormControl>
+            <FormLabel fontSize="sm" color="gray.400">
+              Total I spent this year 💸
+            </FormLabel>
+            <Input name="money" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
 
           <Button
             colorScheme="orange"
             size="lg"
             w="100%"
-            onClick={generatePoster}
+            onClick={downloadPoster}
           >
-            Generate Poster
+            Download Poster
           </Button>
         </VStack>
 
@@ -168,25 +155,20 @@ function PosterPreview({ stats, image, YEAR }) {
       {/* Header */}
       <Box>
         <Text fontSize="xs" color="orange.400" letterSpacing="widest">
-          my riding recap {YEAR}
+          MY RIDING RECAP {YEAR}
         </Text>
-        {(stats.brand || stats.ride) && (
-          <Text fontSize="sm" color="gray.400">
-            {stats.brand} {stats.ride}
-          </Text>
-        )}
       </Box>
 
       {/* Polaroid Photo */}
-      {image && (
-        <Box
-          bg="white"
-          p={2}
-          borderRadius="md"
-          boxShadow="lg"
-          mx="auto"
-          w="85%"
-        >
+      <Box
+        bg="white"
+        p={2}
+        borderRadius="md"
+        boxShadow="lg"
+        mx="auto"
+        w="85%"
+      >
+        {image && (
           <Image
             src={image}
             alt="Trip"
@@ -194,21 +176,20 @@ function PosterPreview({ stats, image, YEAR }) {
             w="100%"
             h="160px"
           />
-          {stats.handle && (
-            <Text mt={2} fontSize="xs" color="gray.700" fontWeight="bold">
-              @{stats.handle}
-            </Text>
-          )}
-        </Box>
-      )}
+        )}
+        <Text mt={2} fontSize="xs" color="gray.700" fontWeight="bold">
+          {stats.handle ? `@${stats.handle}` : "@yourhandle"}
+        </Text>
+      </Box>
 
       {/* Stats */}
       <VStack spacing={1}>
-        {stats.km && <Stat label="🛣️ rode" value={stats.km + " km"} />}
-        {stats.trips && <Stat label="🧭 rides" value={stats.trips} />}
-        {stats.speed && <Stat label="💨 fastest" value={stats.speed + " km/h"} />}
-        {stats.longest && <Stat label="🏔️ longest day" value={stats.longest + " km"} />}
-        {stats.money && <Stat label="💸 fuelled" value={`₹${stats.money}`} />}
+        {stats.km && <Stat label="🛣️ This year I rode" value={stats.km + " km"} />}
+        {stats.trips && <Stat label="🧭 Completed rides" value={stats.trips} />}
+        {stats.speed && <Stat label="💨 Fastest" value={stats.speed + " km/h"} />}
+        {stats.longest && <Stat label="🏔️ Longest run in a day" value={stats.longest + " km"} />}
+        {stats.challans && <Stat label="🚓 Police meetups / Challans" value={stats.challans} />}
+        {stats.money && <Stat label="💸 Total I spent this year" value={`₹${stats.money}`} />}
       </VStack>
 
       {/* Footer */}
