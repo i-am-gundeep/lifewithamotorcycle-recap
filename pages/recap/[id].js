@@ -1,94 +1,108 @@
-"use client";
 import { useEffect, useState } from "react";
 import { Box, VStack, Text, Button, Image } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import html2canvas from "html2canvas";
 
 export default function Recap() {
-  const { query } = useRouter();
+  const router = useRouter();
+  const { id } = router.query;
   const YEAR = new Date().getFullYear();
+
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (query.id) {
-      const saved = sessionStorage.getItem(query.id);
-      if (saved) setData(JSON.parse(saved));
+    if (!id) return;
+
+    const saved = sessionStorage.getItem(id);
+    if (saved) {
+      setData(JSON.parse(saved));
     }
-  }, [query.id]);
+  }, [id]);
 
   const downloadPoster = async () => {
-    const canvas = await html2canvas(document.getElementById("poster"), {
-      scale: 3
+    const element = document.getElementById("poster");
+    if (!element) return;
+
+    const canvas = await html2canvas(element, {
+      scale: 3,
+      backgroundColor: "#F3F2EE"
     });
+
     const link = document.createElement("a");
-    link.download = "my_riding_recap.png";
-    link.href = canvas.toDataURL();
+    link.download = "my_riding_recap_2025.png";
+    link.href = canvas.toDataURL("image/png");
     link.click();
   };
 
   if (!data) return null;
 
   return (
-    <Box minH="100vh" bg="#141414" color="white" py={10}>
+    <Box minH="100vh" bg="#F3F2EE" color="#111" py={10}>
       <VStack spacing={6}>
+        {/* POSTER */}
         <Box
           id="poster"
           w="360px"
-          h="640px"
-          bg="#141414"
+          h="640px" // 9:16
+          bg="#F3F2EE"
+          border="1px solid #DDD"
           borderRadius="2xl"
-          border="1px solid #222"
           p={4}
-          textAlign="center"
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
+          textAlign="center"
         >
-          {/* Header */}
-          <Box>
-            <Text fontSize="xs" color="orange.400" letterSpacing="widest">
-              MY RIDING RECAP {YEAR}
-            </Text>
-          </Box>
+          {/* HEADER */}
+          <Text fontSize="xs" letterSpacing="widest" color="orange.500">
+            MY RIDING RECAP {YEAR}
+          </Text>
 
-          {/* Polaroid */}
+          {/* POLAROID */}
           <Box
-            bg="white"
+            bg="#FAFAFA"
             p={2}
             borderRadius="md"
-            boxShadow="lg"
-            mx="auto"
             w="85%"
+            mx="auto"
+            transform="rotate(-0.2deg)"
+            boxShadow="
+              0 10px 25px rgba(0,0,0,0.25),
+              0 4px 10px rgba(0,0,0,0.15)
+            "
           >
             {data.image && (
               <Image
                 src={data.image}
-                objectFit="cover"
+                alt="memory"
                 w="100%"
                 h="200px"
+                objectFit="cover"
               />
             )}
-            <Text mt={2} fontSize="sm" color="gray.700" fontWeight="bold">
-              {data.handle ? `@${data.handle}` : "@yourhandle"}
+
+            <Text mt={2} fontSize="sm" fontWeight="bold" color="gray.700">
+              @{data.handle || "yourhandle"}
             </Text>
           </Box>
 
-          {/* Stats */}
+          {/* STATS */}
           <VStack spacing={1}>
-            {data.km && <Stat label="🛣️ This year I rode" value={data.km + " km"} />}
-            {data.trips && <Stat label="🧭 Completed rides" value={data.trips} />}
-            {data.speed && <Stat label="💨 Fastest" value={data.speed + " km/h"} />}
-            {data.longest && <Stat label="🏔️ Longest run in a day" value={data.longest + " km"} />}
-            {data.challans && <Stat label="🚓 Police meetups / Challans" value={data.challans} />}
-            {data.money && <Stat label="💸 Total I spent this year" value={`₹${data.money}`} />}
+            {data.km && stat("🛣️ This year I rode", `${data.km} km`)}
+            {data.trips && stat("🧭 Completed rides", data.trips)}
+            {data.speed && stat("💨 Fastest", `${data.speed} km/h`)}
+            {data.longest && stat("🏔️ Longest run in a day", `${data.longest} km`)}
+            {data.challans && stat("🚓 Police meetups", data.challans)}
+            {data.money && stat("💸 Total I spent", `₹${data.money}`)}
           </VStack>
 
-          {/* Footer */}
+          {/* FOOTER */}
           <Text fontSize="xs" color="gray.500">
             made with ❤️
           </Text>
         </Box>
 
+        {/* DOWNLOAD */}
         <Button colorScheme="orange" size="lg" onClick={downloadPoster}>
           Download Poster
         </Button>
@@ -97,10 +111,10 @@ export default function Recap() {
   );
 }
 
-function Stat({ label, value }) {
+function stat(label, value) {
   return (
     <Box>
-      <Text fontSize="10px" color="gray.400" letterSpacing="widest">
+      <Text fontSize="10px" letterSpacing="widest" color="gray.600">
         {label}
       </Text>
       <Text fontSize="lg" fontWeight="bold">
