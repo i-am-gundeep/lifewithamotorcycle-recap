@@ -58,7 +58,7 @@ export default function Generate() {
           {/* My Fav Memory */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              My fav memory 📷
+              My Favourite Memory this Year 📷
             </FormLabel>
             <Input type="file" accept="image/*" onChange={handleImageUpload} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
@@ -66,7 +66,7 @@ export default function Generate() {
           {/* My IG Handle */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              My IG handle 📸
+              My IG 📸
             </FormLabel>
             <Input name="handle" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
@@ -82,7 +82,7 @@ export default function Generate() {
           {/* Completed rides */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              Completed rides 🧭
+              Number of Rides I Completed this Year  🧭
             </FormLabel>
             <Input name="trips" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
@@ -90,7 +90,7 @@ export default function Generate() {
           {/* Fastest */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              Fastest 💨
+              Fastest I rode this year 💨
             </FormLabel>
             <Input name="speed" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
@@ -98,7 +98,7 @@ export default function Generate() {
           {/* Longest run in a day */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              Longest run in a day 🏔️
+              Longest I rode in One Day 🏔️
             </FormLabel>
             <Input name="longest" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
@@ -106,7 +106,7 @@ export default function Generate() {
           {/* Police meetups / Challans */}
           <FormControl>
             <FormLabel fontSize="sm" color="gray.400">
-              Police meetups / Challans? 🚓
+              Police Meetups / Challans this Year 🚓
             </FormLabel>
             <Input name="challans" onChange={handleChange} bg="#1A1A1A" border="1px solid #222" />
           </FormControl>
